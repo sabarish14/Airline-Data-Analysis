@@ -28,7 +28,7 @@ public class BsonDump {
 		for (String k:keySet)
 		{
 			
-	      		 System.out.println(k+":"+obj.get(k));
+	      		 System.out.println(k);
 		}
 		
                 if(obj == null){
