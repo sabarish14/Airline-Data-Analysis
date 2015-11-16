@@ -11,7 +11,7 @@ import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
 import java.util.*;
 import org.apache.mahout.math.*;
-
+import java.io.*;
 public class BsonDump 
 {
 
@@ -20,18 +20,23 @@ public class BsonDump
     {
     	c=new Categories();
 	String columnFile="columns.txt";
-	FileOps f=new FileOps(columnFile);
-	ArrayList<String> columns=f.read();
-	System.out.println("columns:"+columns.toString());
+	FileOps fileRead=new FileOps(columnFile);
+	String outputFile= "output.csv";
+	FileOps fileWrite=new FileOps(outputFile);
+	ArrayList<String> columns=fileRead.read();
+	FileWriter fw = fileWrite.writeHeaders(columns);
+	System.out.println("columns:" + columns.toString());
         File file = new File(filename);
         InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
 	InputStream inputStream1 = new BufferedInputStream(new FileInputStream(file));
 	List<NamedVector> vector = new LinkedList<NamedVector>();
+	ArrayList <double[]> doubleList= new ArrayList <double[]> ();
         BSONDecoder decoder = new BasicBSONDecoder();
 	HashMap<String,HashMap<String,Integer>> map=c.categorize(inputStream1);
         int count = 0;
-        try 
+	try 
 	{
+	   System.out.println ("Total input size"+ inputStream.available());
             while (inputStream.available() > 0) 
 	    {
 	        NamedVector v1;
@@ -58,14 +63,17 @@ public class BsonDump
 				else
 			 		arr[i]= Double.parseDouble(obj.get(k).toString());
 			}
-			 System.out.println(k+":"+arr[i]);
+			/// System.out.println(k+":"+arr[i]);
 			 i++;
 		}
 		v1=new NamedVector(new DenseVector(arr),String.valueOf(count));
                 count++;
 		vector.add(v1);
-		break;
+		doubleList.add(arr);
+		if (count > 3 )
+			break;
             }
+	    fileWrite.writeRows(doubleList,fw);
         }
 	catch (IOException e) 
 	{
