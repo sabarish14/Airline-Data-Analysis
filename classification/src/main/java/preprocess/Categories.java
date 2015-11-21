@@ -6,7 +6,7 @@ public class Categories
 {
 	public HashMap<String,HashMap<String,Integer>>  categorize(InputStream stream)
 	{
-		FileOps f = new FileOps("categories.txt");
+		FileRead f = new FileRead("categories.txt");
 		ArrayList<String> columns = f.read();
 		BSONDecoder decoder = new BasicBSONDecoder();
 		HashMap<String,HashMap<String,Integer>> map=new HashMap<String,HashMap<String,Integer>>();
