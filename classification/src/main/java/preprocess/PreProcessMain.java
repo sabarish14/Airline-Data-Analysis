@@ -125,7 +125,7 @@ public class PreProcessMain
 						}
 						continue;
 	      			}
-	      			//Arrival Delay field is the label: 1- Delay. 2- No Delay.
+	      			//Arrival Delay field is the label: 1- Delay. -1 : No Delay.
 	      			else if (k.equals("arrDelay"))
 	      			{	
 	      				double label=Double.parseDouble(obj.get(k).toString());
@@ -144,6 +144,10 @@ public class PreProcessMain
         	catch(NullPointerException e)
 			{
 				System.out.println("Null fields:"+k);
+				if (k.equals("arrDelay"))
+					labelStr="1";
+				else
+					arr[i]=0;
 			}
 			i++;
       			
