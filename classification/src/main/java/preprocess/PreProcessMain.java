@@ -21,7 +21,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.mahout.math.*;
 import org.apache.mahout.math.Vector;
 
-public class PreProcessMain 
+ class PreProcess 
 {
 
     Categories c;
@@ -42,6 +42,7 @@ public class PreProcessMain
     	    for (MahoutVector vector : vectors)
     	    {
     	    	VectorWritable vec = new VectorWritable();
+    	    	int size=vector.vector.size();
     	        vec.set(vector.vector);
     	    	writer.append(new Text("/" + vector.label + "/"), vec);
     	    }
@@ -81,13 +82,10 @@ public class PreProcessMain
 	            MahoutVector vector = this.vectorize(obj, map, columns);
 	            vectors.add(vector);
 	            count++;           
-	            if (count > 100 )
+	            if (count > 10000000 )
 	            	break;
 	       }
 	       System.out.println("Total rows written:"+count);
-	       //fileWrite.writeRows(doubleList);
-	       //fileWrite.close();
-	       //inputStream.close();
     }
 	catch (IOException e) 
 	{
@@ -117,6 +115,7 @@ public class PreProcessMain
 	      			//If it is Arrival or Dep time, convert to hh,mm,ss
 	      			if (k.equals("crsArrTime")|| (k.equals("crsDepTime")))
 	      			{
+	      				//System.out.println(obj.get(k).toString());
 						ArrayList<String> split= this.split(obj.get(k).toString());
 						for (String str:split)
 						{
@@ -143,7 +142,7 @@ public class PreProcessMain
     		}
         	catch(NullPointerException e)
 			{
-				System.out.println("Null fields:"+k);
+				//System.out.println("Null fields:"+k);
 				if (k.equals("arrDelay"))
 					labelStr="1";
 				else
@@ -155,6 +154,7 @@ public class PreProcessMain
     	
     	// Create a Dense vector from double array
     	Vector v1= new DenseVector(arr);
+    	int size=v1.size();
     	// Initialize the custom class
     	MahoutVector mahoutVector = new MahoutVector();
     	//Assign the vector
@@ -176,7 +176,9 @@ public class PreProcessMain
 		}
 		return result;
     }
-
+}
+ public class PreprocessMain
+ {
     public static void main(String args[]) throws Exception 
     {
         if (args.length < 1) 
@@ -184,7 +186,7 @@ public class PreProcessMain
             throw new IllegalArgumentException("Expected <bson filename> argument");
         }
         String filename = args[0];
-        PreProcessMain bsonDump = new PreProcessMain();
+        PreProcess bsonDump = new PreProcess();
         bsonDump.generatesequenceFile(filename);
 
     }

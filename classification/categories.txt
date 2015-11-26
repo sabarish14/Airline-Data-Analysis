@@ -1,8 +1,5 @@
 carrierId
 destAirportId
-destCityId
 destStateId
 origAirportId
-origCityId
 origStateId
-diverted

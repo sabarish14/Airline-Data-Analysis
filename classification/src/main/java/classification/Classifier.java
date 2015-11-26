@@ -15,6 +15,7 @@ import org.apache.mahout.classifier.naivebayes.training.TrainNaiveBayesJob;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
 
+import preprocess.CsvToVectors;
 import preprocess.MahoutVector;
 
 // Classifier class that trains and tests a model
@@ -29,10 +30,13 @@ public class Classifier
 
 		  Text key = new Text(); 
 		  VectorWritable val = new VectorWritable(); 
-
+		  int i=0;
 		  while (reader.next(key, val)) 
 		  {
 		    System.out.println(key + ":" + val);
+		    if (i>5)
+		    	break;
+		    i++;
 		  }
 		  reader.close();
 		  
@@ -64,7 +68,7 @@ public class Classifier
 		
 	    AbstractVectorClassifier classifier = new ComplementaryNaiveBayesClassifier(naiveBayesModel);
 
-		/*String csvPath = "/home/jossef/Desktop/kdd/KDDTest+.csv";
+		String csvPath = "test1.csv";
 		
 	    CsvToVectors csvToVectors = new CsvToVectors(csvPath);
 	    
@@ -76,43 +80,37 @@ public class Classifier
 	    
 	    for (MahoutVector mahoutVector : vectors)
 	    {
-	    	Vector prediction = classifier.classifyFull(mahoutVector.vector);
-	    	
+	    	Vector prediction = classifier.classifyFull(mahoutVector.vector);    
 	    	// They sorted alphabetically 
-	    	// 0 = anomaly, 1 = normal (because 'anomaly' > 'normal') 
-	    	double anomaly = prediction.get(0);
-	    	double normal = prediction.get(1);
+	    	// -1 = noDelay, 1 = delay 
+	    	double noDelayScore= prediction.get(0);
+	    	double delayScore = prediction.get(1);
 	    	
-	    	String predictedClass = "anomaly";
-	    	if (normal > anomaly)
+	    	String predictedClass = "1";
+	    	if (noDelayScore > delayScore)
 	    	{
-	    		predictedClass="normal";
+	    		predictedClass="-1";
 	    	}
 
-	    	if (predictedClass.equals(mahoutVector.classifier))
+	    	if (predictedClass.equals(mahoutVector.label))
 	    	{
 	    		success++;
 	    	}
 	    	
 	    	total ++;
 	    }
-	    
-	    System.out.println(total + " : " + success + " : " + (total - success) + " " + ((double)success/total));
-	    
-	    
-	    */
-
-	    
-		//StandardNaiveBayesClassifier classifier = new StandardNaiveBayesClassifier();
-		
+	    double accuracy=(double)success/total;
+	    System.out.println(total + " : " + success + " : " + (total - success) + " " + accuracy);
 	}
 
 	public static void main(String[] args) throws Throwable
 	{
 		String sequenceFile = "sequence";
-		Path seqFilePath = new Path("sequence");
+		Path seqFilePath = new Path(sequenceFile);
+		
 		train();
 		readSeqFile(seqFilePath);
+		
 	}
 
 

@@ -4,6 +4,13 @@ import org.bson.*;
 import java.io.*;
 public class Categories
 {
+	
+	public ArrayList<String> findCategories()
+	{
+		FileRead f = new FileRead("test_categories.txt");
+		ArrayList<String> columns = f.read();
+		return columns;
+	}
 	public HashMap<String,HashMap<String,Integer>>  categorize(InputStream stream)
 	{
 		FileRead f = new FileRead("categories.txt");
@@ -16,34 +23,35 @@ public class Categories
 		    while (stream.available() > 0) 
 		    {
                 	BSONObject obj = decoder.readObject(stream);
-			for (String k:columns)
-			{
-				String val=obj.get(k).toString();
-				if (map.containsKey(k))
-				{
-					HashMap<String, Integer> nestedMap=map.get(k);
-					if (!nestedMap.containsKey(val))
+					for (String k:columns)
 					{
-						nestedMap.put(val,nestedMap.size()+1);
+						String val=obj.get(k).toString();
+						if (map.containsKey(k))
+						{
+							HashMap<String, Integer> nestedMap=map.get(k);
+							if (!nestedMap.containsKey(val))
+							{
+								nestedMap.put(val,nestedMap.size()+1);
+							}
+						}
+						else
+						{
+							HashMap<String, Integer> nestedMap = new HashMap<String, Integer> ();
+							nestedMap.put(val,1);
+							map.put(k,nestedMap);
+						}
 					}
-				}
-				else
-				{
-					HashMap<String, Integer> nestedMap = new HashMap<String, Integer> ();
-					nestedMap.put(val,1);
-					map.put(k,nestedMap);
-				}
-			}
-			//System.out.println(i);
-		   	 i++;
-			 if (i>10000)
-			 	break;
-	
-		    }
+				   	 i++;
+					 if (i>10000)
+					 	break;
+			
+				    }
 		}
 		catch (IOException e)
 		{
 		}
+		Serialization s=new Serialization();
+		s.serialize(map);
 		return map;
 	}
 }

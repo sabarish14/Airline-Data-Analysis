@@ -20,7 +20,6 @@ class FileRead
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			while((line = bufferedReader.readLine()) != null) 
 			{
-				
 				text.add(line);
 			}
 			bufferedReader.close();
