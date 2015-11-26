@@ -4,8 +4,8 @@ crsArrTime
 crsDepTime
 dayOfMonth
 dayOfWeek
-destAirportId
+destAirport
 destStateId
 month
-origAirportId
+origAirport
 origStateId

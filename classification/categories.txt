@@ -1,5 +1,5 @@
 carrierId
-destAirportId
+destAirport
 destStateId
-origAirportId
+origAirport
 origStateId
