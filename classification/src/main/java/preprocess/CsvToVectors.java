@@ -35,7 +35,9 @@ public class CsvToVectors
 			ArrayList<String> categories=c.findCategories();
 			while ((line = reader.readNext()) != null)
 			{
-				vectors.add(this.vectorize(line,columns,categories));
+				MahoutVector vector=this.vectorize(line,columns,categories);
+				if (vector!=null)
+					vectors.add(vector);
 			}
 		}
 		catch(IOException e)
@@ -98,9 +100,8 @@ public class CsvToVectors
 	    		}
 	        	catch(Exception e)
 				{
-					//System.out.println("Null fields:"+columns[col]);
-					if (columns[col].equals("arrDelay"))
-						labelStr="1";
+					if (columns[col].equals("ARR_DELAY"))
+						return null;
 					else
 						arr[i]=0;
 				}
@@ -126,10 +127,10 @@ public class CsvToVectors
 		// Last two denotes mm and 0,len-2 denotes hh.No ss info . Hence add 00 to ss
 		//Add the hh
 		result.add(val.substring(0,val.length()-2));
-		//Add the mm
+		/*//Add the mm
 		result.add(val.substring(val.length()-2, val.length()));
 		String ss="00";
-		result.add(ss);
+		result.add(ss);*/
 		return result;
 	}
 		

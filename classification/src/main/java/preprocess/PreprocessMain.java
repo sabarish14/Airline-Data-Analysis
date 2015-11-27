@@ -83,7 +83,9 @@ class PreProcess
 	            MahoutVector vector = this.vectorize(obj, map, columns);
 	            if (vector != null)
 	            	vectors.add(vector);
-	            count++;           
+	            count++;   
+	            if (count >10000000)
+	            	break;
 	       }
 	       System.out.println("Total rows written:"+vectors.size());
     }
@@ -98,15 +100,16 @@ class PreProcess
     // This method returns a mahout vector
     private MahoutVector  vectorize (BSONObject obj,HashMap<String, HashMap<String,Integer>> map,ArrayList<String> columns)
     {
-        double[] arr=new double[columns.size()+3];
+        double[] arr=new double[columns.size()];
         // Column count
         int i=0;
         String labelStr="";
     	for (String k:columns)
         {
-    		//System.out.print(obj.get(k).toString()+"\t");
+    		
     		try
     		{
+    			//System.out.print(obj.get(k).toString()+"\t");
     			// If the field is a categorical field, assign the category.
 	        	if (map.containsKey(k))
 	        	{
@@ -140,7 +143,13 @@ class PreProcess
 	      			// Its a numeric field. Convert directly
 	      			else
 	      			{
+	      					
 	      					arr[i]= Double.parseDouble(obj.get(k).toString());	
+	      					if (k.equals("month"))
+	      					{
+	      						if (arr[i] !=1)
+	      							return null;
+	      					}
 	      					i++;
 	      			}
 	      		}
@@ -149,6 +158,7 @@ class PreProcess
 			{
 				if (k.equals("arrDelay"))
 					return null;
+				
 				else
 				{
 					arr[i]=0;
@@ -179,7 +189,7 @@ class PreProcess
     	ArrayList<String> result= new ArrayList<String> ();
 		String[] splitString = val.split(" ");
 		splitString =splitString[3].split(":");
-		for (int i=0;i<3;i++)
+		for (int i=0;i<1;i++)
 		{
 			result.add(splitString[i]);
 		}

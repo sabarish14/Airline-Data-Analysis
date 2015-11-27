@@ -61,20 +61,20 @@ public class Classifier
 		
 		// Train the classifier
 		NaiveBayesModel naiveBayesModel = NaiveBayesModel.materialize(new Path(outputDirectory), conf);
-
+		
 		System.out.println("features: " + naiveBayesModel.numFeatures());
 		System.out.println("labels: " + naiveBayesModel.numLabels());
-		
+		naiveBayesModel.labelWeight(0);
+		System.out.println(naiveBayesModel.featureWeight(0));
 
 		StandardNaiveBayesClassifier classifier = new StandardNaiveBayesClassifier(naiveBayesModel);	    
 
 	    	//AbstractVectorClassifier classifier = new ComplementaryNaiveBayesClassifier(naiveBayesModel);
 
 
-		String csvPath = "test1.csv";
+		String csvPath = "test.csv";
 		
 	    CsvToVectors csvToVectors = new CsvToVectors(csvPath);
-	    
 	    List<MahoutVector> vectors = csvToVectors.vectorize();
 	    
 	    
@@ -89,7 +89,6 @@ public class Classifier
 	    	// -1 = noDelay, 1 = delay 
 	    	double noDelayScore= prediction.get(0);
 	    	double delayScore = prediction.get(1);
-	    	
 	    	String predictedClass = "1";
 	    	if (noDelayScore > delayScore)
 	    	{
@@ -100,7 +99,7 @@ public class Classifier
 	    	{
 	    		success++;
 	    	}
-	    	if (total>100)
+	    	if (total>100000)
 	    		break;
 	    	total ++;
 	    }
