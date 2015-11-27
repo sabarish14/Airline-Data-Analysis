@@ -84,8 +84,6 @@ class PreProcess
 	            if (vector != null)
 	            	vectors.add(vector);
 	            count++;           
-	            if (count > 100000 )
-	            	break;
 	       }
 	       System.out.println("Total rows written:"+vectors.size());
     }
