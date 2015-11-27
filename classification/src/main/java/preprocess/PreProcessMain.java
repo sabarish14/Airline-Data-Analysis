@@ -21,7 +21,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.mahout.math.*;
 import org.apache.mahout.math.Vector;
 
- class PreProcess 
+class PreProcess 
 {
 
     Categories c;
@@ -79,13 +79,15 @@ import org.apache.mahout.math.Vector;
 	       while (inputStream.available() > 0) 
 		   {	               
 	            BSONObject obj = decoder.readObject(inputStream);
+	            //System.out.println(obj.toString());
 	            MahoutVector vector = this.vectorize(obj, map, columns);
-	            vectors.add(vector);
+	            if (vector != null)
+	            	vectors.add(vector);
 	            count++;           
-	            if (count > 10000000 )
+	            if (count > 100000 )
 	            	break;
 	       }
-	       System.out.println("Total rows written:"+count);
+	       System.out.println("Total rows written:"+vectors.size());
     }
 	catch (IOException e) 
 	{
@@ -98,17 +100,21 @@ import org.apache.mahout.math.Vector;
     // This method returns a mahout vector
     private MahoutVector  vectorize (BSONObject obj,HashMap<String, HashMap<String,Integer>> map,ArrayList<String> columns)
     {
-        double[] arr=new double[columns.size()+4];
+        double[] arr=new double[columns.size()+3];
         // Column count
         int i=0;
         String labelStr="";
     	for (String k:columns)
         {
+    		//System.out.print(obj.get(k).toString()+"\t");
     		try
     		{
     			// If the field is a categorical field, assign the category.
 	        	if (map.containsKey(k))
+	        	{
 	        		arr[i]=(double)(map.get(k).get(obj.get(k).toString()));
+	        		i++;
+	        	}
 	        	// If not then there are three conditions
 	      		else
 	      		{
@@ -128,7 +134,7 @@ import org.apache.mahout.math.Vector;
 	      			else if (k.equals("arrDelay"))
 	      			{	
 	      				double label=Double.parseDouble(obj.get(k).toString());
-	      				if (label>0)
+	      				if (label>20)
 	      					labelStr="1";
 	      				else
 	      					labelStr="-1";		
@@ -137,20 +143,25 @@ import org.apache.mahout.math.Vector;
 	      			else
 	      			{
 	      					arr[i]= Double.parseDouble(obj.get(k).toString());	
+	      					i++;
 	      			}
 	      		}
     		}
         	catch(NullPointerException e)
 			{
-				//System.out.println("Null fields:"+k);
 				if (k.equals("arrDelay"))
-					labelStr="1";
+					return null;
 				else
+				{
 					arr[i]=0;
+					i++;
+				}
 			}
-			i++;
+    		
+			
       			
       	}
+    	//System.out.println();
     	
     	// Create a Dense vector from double array
     	Vector v1= new DenseVector(arr);

@@ -11,6 +11,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.mahout.classifier.AbstractVectorClassifier;
 import org.apache.mahout.classifier.naivebayes.ComplementaryNaiveBayesClassifier;
 import org.apache.mahout.classifier.naivebayes.NaiveBayesModel;
+import org.apache.mahout.classifier.naivebayes.StandardNaiveBayesClassifier;
 import org.apache.mahout.classifier.naivebayes.training.TrainNaiveBayesJob;
 import org.apache.mahout.math.Vector;
 import org.apache.mahout.math.VectorWritable;
@@ -34,8 +35,6 @@ public class Classifier
 		  while (reader.next(key, val)) 
 		  {
 		    System.out.println(key + ":" + val);
-		    if (i>5)
-		    	break;
 		    i++;
 		  }
 		  reader.close();
@@ -66,8 +65,7 @@ public class Classifier
 		System.out.println("features: " + naiveBayesModel.numFeatures());
 		System.out.println("labels: " + naiveBayesModel.numLabels());
 		
-	    AbstractVectorClassifier classifier = new ComplementaryNaiveBayesClassifier(naiveBayesModel);
-
+		StandardNaiveBayesClassifier classifier = new StandardNaiveBayesClassifier(naiveBayesModel);	    
 		String csvPath = "test1.csv";
 		
 	    CsvToVectors csvToVectors = new CsvToVectors(csvPath);
@@ -80,6 +78,7 @@ public class Classifier
 	    
 	    for (MahoutVector mahoutVector : vectors)
 	    {
+	    	
 	    	Vector prediction = classifier.classifyFull(mahoutVector.vector);    
 	    	// They sorted alphabetically 
 	    	// -1 = noDelay, 1 = delay 
@@ -96,7 +95,8 @@ public class Classifier
 	    	{
 	    		success++;
 	    	}
-	    	
+	    	if (total>100)
+	    		break;
 	    	total ++;
 	    }
 	    double accuracy=(double)success/total;
@@ -107,9 +107,9 @@ public class Classifier
 	{
 		String sequenceFile = "sequence";
 		Path seqFilePath = new Path(sequenceFile);
-		
+		//readSeqFile(seqFilePath);
 		train();
-		readSeqFile(seqFilePath);
+		
 		
 	}
 
