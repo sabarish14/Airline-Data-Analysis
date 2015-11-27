@@ -82,8 +82,8 @@ import org.apache.mahout.math.Vector;
 	            MahoutVector vector = this.vectorize(obj, map, columns);
 	            vectors.add(vector);
 	            count++;           
-	            if (count > 10000000 )
-	            	break;
+	          /*  if (count > 10000000 )
+	            	break;*/
 	       }
 	       System.out.println("Total rows written:"+count);
     }

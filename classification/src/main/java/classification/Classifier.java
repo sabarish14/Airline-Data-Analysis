@@ -66,7 +66,7 @@ public class Classifier
 		System.out.println("features: " + naiveBayesModel.numFeatures());
 		System.out.println("labels: " + naiveBayesModel.numLabels());
 		
-	    AbstractVectorClassifier classifier = new ComplementaryNaiveBayesClassifier(naiveBayesModel);
+	    	AbstractVectorClassifier classifier = new ComplementaryNaiveBayesClassifier(naiveBayesModel);
 
 		String csvPath = "test1.csv";
 		
