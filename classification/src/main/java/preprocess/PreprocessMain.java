@@ -85,7 +85,7 @@ class PreProcess
 	            	vectors.add(vector);
 	            count++;           
 	       }
-	       System.out.println("Total rows written:"+vectors.size());
+	       System.out.println("Actual count:"+count+"\t"+ "Vector size:"+vectors.size());
     }
 	catch (IOException e) 
 	{
