@@ -61,21 +61,15 @@ public class Classifier
 		
 		// Train the classifier
 		NaiveBayesModel naiveBayesModel = NaiveBayesModel.materialize(new Path(outputDirectory), conf);
-		
 		System.out.println("features: " + naiveBayesModel.numFeatures());
 		System.out.println("labels: " + naiveBayesModel.numLabels());
 		naiveBayesModel.labelWeight(0);
 		System.out.println(naiveBayesModel.featureWeight(0));
-
 		StandardNaiveBayesClassifier classifier = new StandardNaiveBayesClassifier(naiveBayesModel);	    
-
-	    	//AbstractVectorClassifier classifier = new ComplementaryNaiveBayesClassifier(naiveBayesModel);
-
-
 		String csvPath = "test.csv";
 		
-	    CsvToVectors csvToVectors = new CsvToVectors(csvPath);
-	    List<MahoutVector> vectors = csvToVectors.vectorize();
+	    	CsvToVectors csvToVectors = new CsvToVectors(csvPath);
+	   	List<MahoutVector> vectors = csvToVectors.vectorize();
 	    
 	    
 	    int total = 0;
@@ -99,7 +93,7 @@ public class Classifier
 	    	{
 	    		success++;
 	    	}
-	    	if (total>100000)
+	    	if (total>1000)
 	    		break;
 	    	total ++;
 	    }

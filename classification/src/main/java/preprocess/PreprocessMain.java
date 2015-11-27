@@ -84,8 +84,8 @@ class PreProcess
 	            if (vector != null)
 	            	vectors.add(vector);
 	            count++;   
-	            if (count >10000000)
-	            	break;
+	            /*if (count >10000000)
+	            	break;*/
 	       }
 	       System.out.println("Actual count:"+count+"\t"+ "Vector size:"+vectors.size());
     }
@@ -135,7 +135,7 @@ class PreProcess
 	      			else if (k.equals("arrDelay"))
 	      			{	
 	      				double label=Double.parseDouble(obj.get(k).toString());
-	      				if (label>20)
+	      				if (label>10)
 	      					labelStr="1";
 	      				else
 	      					labelStr="-1";		
@@ -156,14 +156,15 @@ class PreProcess
     		}
         	catch(NullPointerException e)
 			{
-				if (k.equals("arrDelay"))
+				/*if (k.equals("arrDelay"))
 					return null;
-				
-				else
+				*/
+				return null;
+				/*else
 				{
 					arr[i]=0;
 					i++;
-				}
+				}*/
 			}
     		
 			
