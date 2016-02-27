@@ -1,17 +1,21 @@
 package preprocess;
 import java.io.*;
 import java.util.*;
-class FileWrite
+
+import au.com.bytecode.opencsv.CSVReader;
+
+public class FileWrite
 {
 	String name;
 	FileWriter fileWriter;
 	BufferedWriter bufferedWriter ;
-	FileWrite(String name)
+	public FileWrite(String name)
 	{
 		this.name=name;
 		
 		try 
-		{
+		{	
+			
 			fileWriter = new FileWriter(name);
 			bufferedWriter =new BufferedWriter(fileWriter);
 		} 
@@ -23,7 +27,7 @@ class FileWrite
 		
 	}
 	
-	void writeRows (ArrayList<double[]> arr)
+	public void writeRows (ArrayList<double[]> arr)
 
 	{
 		try
@@ -74,7 +78,34 @@ class FileWrite
 
 		return fileWriter;
 	}
-	void close()
+	public void csvAppend(List<String[]> csvContent,List<String> prediction)
+	{
+		try 
+		{
+			int count=0;
+			for (String[] lines:csvContent)
+			{
+				String line="";
+				for (String col:lines)
+				{
+					line+=col+",";					
+				}
+				line+=prediction.remove(0);
+				this.bufferedWriter.write(line);
+				this.bufferedWriter.newLine();
+				
+				
+				
+			}
+			
+			
+		} 
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	public void close()
 	{
 		try
 		{

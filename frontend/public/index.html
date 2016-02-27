@@ -1,0 +1,77 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html ng-app="FlightPrediction">
+<head>
+    <title>Flight-Prediction</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+    <!-- Application Dependencies -->
+    <script src="node_modules/api-check/dist/api-check.js"></script>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="js/services/flight.js"> </script>    
+    <script src="//npmcdn.com/angular-ui-bootstrap@latest/ui-bootstrap-tpls.js"></script>
+   <link rel="stylesheet" href="css/bootstrap-datetimepicker.css"> 
+    <!-- This is the latest version of formly core. -->
+    <script src="//npmcdn.com/angular-formly@latest/dist/formly.js"></script>
+    <!-- This is the latest version of formly bootstrap templates -->
+    <script src="//npmcdn.com/angular-formly-templates-bootstrap@latest/dist/angular-formly-templates-bootstrap.js"></script>
+
+    <!-- Application Scripts -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="js/moment.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+   <script src="js/bootstrap-datetimepicker.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/MainController.js"></script>
+	<script>
+		$(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+	</script>
+</head>
+<body ng-controller="mainController">
+	<div class="container">
+		<!-- HEADER-->
+		<div class="jumbotron text-center">
+			<h1>Flight delay prediction system</h1>
+		</div>
+		<!-- FORM -->
+		<form>
+			<div class="col-md-12" style="border-bottom: 3px solid #fff; margin-bottom: 10px; padding-bottom: 15px;">
+						<div class="col-md-3 form-group">
+						<!-- BIND THIS VALUE TO formData.orig IN ANGULAR -->
+							  Origin        <select ng-model="formData.origin" ng-options="c for c in orig"></select> 
+						</div>
+						<div class="col-md-3 form-group">
+							  Destination   <select ng-model="formData.dest" ng-options="c for c in dest"></select>
+						</div>
+						<div class="col-md-3 form-group">
+							  Carrier       <select ng-model="formData.carrier" ng-options="c for c in carrier"></select> 
+						</div>
+						<div class="col-md-3 form-group" style="margin-top:-30px;">
+							  Date	<input type='datetime-local' class="form-control"  name="date" ng-model="formData.date"/>
+
+							    
+							    <!--<div class='input-group date' id='datetimepicker1' style="width: 65%;">
+								 <input type='text' class="form-control"  name="date" ng-model="formData.date"/>
+						    	 	 <span class="input-group-addon">
+					            	 	 	<span class="glyphicon glyphicon-calendar"></span>
+						    	 	 </span>
+					
+                				   	    </div>
+							-->
+					
+						</div>
+			</div>
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<button type="submit" class="btn btn-primary btn-lg" ng-click="predict()">Predict</button>
+			</div>
+		</form>
+
+		
+	</div>
+</body>
+</html>

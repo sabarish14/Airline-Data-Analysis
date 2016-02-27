@@ -1,11 +1,13 @@
 package preprocess;
 import java.io.*;
 import java.util.*;
-class FileRead
+
+import au.com.bytecode.opencsv.CSVReader;
+public class FileRead
 {
 	String name;
 	String line;
-	FileRead(String name)
+	public FileRead(String name)
 	{
 		this.name=name;
 	}
@@ -30,6 +32,30 @@ class FileRead
 		}
 
 		return text;
+	}
+	public List<String[]> readCSV ()
+	{
+		List<String[]> result= new ArrayList<String[]>();
+		try
+		{
+			CSVReader reader = new CSVReader(new FileReader(this.name));
+			String[] line;
+			
+			while ((line = reader.readNext()) != null)
+			{
+					if (!line[0].isEmpty())
+						result.add(line);
+			}
+			reader.close();
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+		
+		return result;
+		
 	}
 	
 	

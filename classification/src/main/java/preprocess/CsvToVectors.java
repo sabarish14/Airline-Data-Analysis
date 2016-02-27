@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.mahout.math.DenseVector;
 import org.apache.mahout.math.Vector;
+
 import au.com.bytecode.opencsv.CSVReader;
 public class CsvToVectors 
 {
@@ -48,7 +50,7 @@ public class CsvToVectors
 	}
 	 private MahoutVector  vectorize (String line[],String columns[],ArrayList<String> categories )
 	    {
-	        double[] arr=new double[columns.length+4];
+	        double[] arr=new double[columns.length];
 	        // Column count
 	        int i=0;
 	        String labelStr="";
@@ -63,6 +65,7 @@ public class CsvToVectors
 		        	{
 		        		
 		        		arr[i]=(double)(map.get(columnName).get(val));
+		        		i++;
 
 		        	}
 		        	// If not then there are three conditions
@@ -74,7 +77,18 @@ public class CsvToVectors
 							ArrayList<String> split= this.split(val);
 							for (String str:split)
 							{
-								arr[i]= Double.parseDouble(str);
+								// Convert the hour into buckets eg: 1-5 hour :1st bucket etc.
+								double hour= Double.parseDouble(str);
+								double bucket=1;
+								for (int range=5;range<24;range=range+5)
+								{
+									if (hour<=range)
+									{
+										arr[i]=bucket;
+										break;
+									}
+									bucket++;
+								}
 								i++;
 							}
 							continue;
@@ -83,7 +97,7 @@ public class CsvToVectors
 		      			else if (columnName.equals("ARR_DELAY"))
 		      			{	
 		      				double label=Double.parseDouble(val);
-		      				if (label>0)
+		      				if (label>10)
 		      					labelStr="1";
 		      				else
 		      					labelStr="-1";		
@@ -94,18 +108,24 @@ public class CsvToVectors
 		      					if (!val.isEmpty())
 		      						arr[i]= Double.parseDouble(val);	
 		      					else
-		      						arr[i]=0;
+		      						return null;
+		      					i++;
 		      			}
 		      		}
 	    		}
 	        	catch(Exception e)
 				{
+	        		
 					if (columns[col].equals("ARR_DELAY"))
 						return null;
 					else
+					{
 						arr[i]=0;
+						i++;
+					}
+					
 				}
-				i++;
+			
 	      			
 	      	}
 	    	

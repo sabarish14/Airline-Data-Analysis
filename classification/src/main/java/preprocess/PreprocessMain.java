@@ -6,13 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.bson.BSONDecoder;
 import org.bson.BSONObject;
 import org.bson.BasicBSONDecoder;
-
 import java.util.*;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -42,7 +39,7 @@ class PreProcess
     	    for (MahoutVector vector : vectors)
     	    {
     	    	VectorWritable vec = new VectorWritable();
-    	    	int size=vector.vector.size();
+    	    	//int size=vector.vector.size();
     	        vec.set(vector.vector);
     	    	writer.append(new Text("/" + vector.label + "/"), vec);
     	    }
@@ -51,8 +48,7 @@ class PreProcess
     	catch (IOException e)
     	{
     		
-    	}
-    	
+    	} 	
     }
     //This method returns the list of vectors 
     private List<MahoutVector> vectorize (String filename) throws FileNotFoundException 
@@ -84,8 +80,6 @@ class PreProcess
 	            if (vector != null)
 	            	vectors.add(vector);
 	            count++;   
-	            /*if (count >10000000)
-	            	break;*/
 	       }
 	       System.out.println("Actual count:"+count+"\t"+ "Vector size:"+vectors.size());
     }
@@ -93,7 +87,6 @@ class PreProcess
 	{
          e.printStackTrace();
     }
-    
 	return vectors;
   }
 
@@ -105,11 +98,9 @@ class PreProcess
         int i=0;
         String labelStr="";
     	for (String k:columns)
-        {
-    		
+        {	
     		try
     		{
-    			//System.out.print(obj.get(k).toString()+"\t");
     			// If the field is a categorical field, assign the category.
 	        	if (map.containsKey(k))
 	        	{
@@ -126,7 +117,17 @@ class PreProcess
 						ArrayList<String> split= this.split(obj.get(k).toString());
 						for (String str:split)
 						{
-							arr[i]= Double.parseDouble(str);
+							double hour= Double.parseDouble(str);
+							double bucket=1;
+							for (int range=5;range<24;range=range+5)
+							{
+								if (hour<=range)
+								{
+									arr[i]=bucket;
+									break;
+								}
+								bucket++;
+							}
 							i++;
 						}
 						continue;
@@ -142,8 +143,7 @@ class PreProcess
 	      			}
 	      			// Its a numeric field. Convert directly
 	      			else
-	      			{
-	      					
+	      			{	      					
 	      					arr[i]= Double.parseDouble(obj.get(k).toString());	
 	      					if (k.equals("month"))
 	      					{
@@ -165,16 +165,10 @@ class PreProcess
 					arr[i]=0;
 					i++;
 				}*/
-			}
-    		
-			
-      			
-      	}
-    	//System.out.println();
-    	
+			}     			
+      	}    	
     	// Create a Dense vector from double array
     	Vector v1= new DenseVector(arr);
-    	int size=v1.size();
     	// Initialize the custom class
     	MahoutVector mahoutVector = new MahoutVector();
     	//Assign the vector
@@ -185,11 +179,12 @@ class PreProcess
     }
     
     // Split the time to hh,mm,ss
-        private ArrayList<String> split (String val)
+    private ArrayList<String> split (String val)
     {
     	ArrayList<String> result= new ArrayList<String> ();
 		String[] splitString = val.split(" ");
 		splitString =splitString[3].split(":");
+		
 		for (int i=0;i<1;i++)
 		{
 			result.add(splitString[i]);
@@ -197,7 +192,7 @@ class PreProcess
 		return result;
     }
 }
- public class PreprocessMain
+public class PreprocessMain
  {
     public static void main(String args[]) throws Exception 
     {
@@ -208,7 +203,6 @@ class PreProcess
         String filename = args[0];
         PreProcess bsonDump = new PreProcess();
         bsonDump.generatesequenceFile(filename);
-
     }
 
 }
